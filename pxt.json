@@ -1,0 +1,27 @@
+{
+    "name": "PF Recorder",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "LEGO PF Receiver": "github:aorczyk/lego-pf-receiver#master",
+        "LEGO PF Transmitter": "github:aorczyk/lego-pf-transmitter#master"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "4.0.11",
+        "targetId": "microbit"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj"
+}
