@@ -11,6 +11,67 @@ namespace pfRecorder {
     let isRecording = false;
     let isPlaying = false;
 
+    type ReverseMap = {
+        [key: number]: number;
+    };
+
+    let reverseComboDirectMode: ReverseMap = {
+        // Combo direct mode
+        0b01: 0b10,
+        0b10: 0b01,
+    }
+
+    let reverseSingleOutputMode: ReverseMap = {
+        // Single output mode
+        0b0001: 0b1111,
+        0b0010: 0b1110,
+        0b0011: 0b1101,
+        0b0100: 0b1100,
+        0b0101: 0b1011,
+        0b0110: 0b1010,
+        0b0111: 0b1001,
+
+        0b1111: 0b0001,
+        0b1110: 0b0010,
+        0b1101: 0b0011,
+        0b1100: 0b0100,
+        0b1011: 0b0101,
+        0b1010: 0b0110,
+        0b1001: 0b0111,
+    }
+
+    // ToDo: reverse only specified channel and output.
+    function reverseCommands(commands: number[][]){
+        let out: number[][] = [];
+        let max = commands.length - 1;
+
+        for (let n = max; n >= 0; n--){
+            let task = commands[n];
+
+            // let channel = (0b001100000000 & task[0]) >>> 8;
+            let mode = (0b000001110000 & task[0]) >>> 4;
+            let data: number = 0;
+
+            if (mode == 1) {
+                let red: number = (0b000000000011 & task[0]);
+                let blue: number = (0b000000001100 & task[0]) >>> 2;
+
+                data = (reverseComboDirectMode[blue] << 2) | reverseComboDirectMode[red];
+            } else {
+                let output = (0b000000110000 & task[0]) >>> 4;
+
+                data = reverseSingleOutputMode[(0b000000001111 & task[0])];
+            }
+
+            let newTask: number = (0b111111110000 & task[0]) | data;
+            out.push([task[0], task[1], task[2]])
+        }
+
+        serial.writeString('Reversed...\n')
+        serial.writeString(JSON.stringify(out) + '\n');
+        return out;
+    }
+
     function startRecord(){
         basic.clearScreen();
         led.plot(0, 0)
@@ -69,7 +130,9 @@ namespace pfRecorder {
         pfTransmitter.connectIrSenderLed(irTransmitterPin)
 
         pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Float, PfAction.Pressed, onButtonA)
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Forward, PfAction.Pressed, onButtonB)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Float, PfAction.Pressed, () => {
+            onButtonB()
+        })
     }
 }
 
