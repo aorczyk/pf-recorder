@@ -81,13 +81,13 @@ namespace pfRecorder {
         basic.clearScreen();
         led.plot(0, 0)
         serial.writeString('Recording...\n')
-        data = [];
-        pfReceiver.startRecord([0], data);
+        pfReceiver.startRecord([0]);
     }
 
     function stopRecord(){
-        basic.showNumber(data.length);
         pfReceiver.stopRecord();
+        data = pfReceiver.getRecordedCommands();
+        basic.showNumber(data.length);
         serial.writeString(JSON.stringify(data) + '\n');
     }
 
