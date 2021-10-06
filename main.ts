@@ -1,3 +1,11 @@
+/**
+ * Power Functions Recorder.
+ * Records commands from LEGO Power Functions remote controls and plays them.
+ *
+ * (c) 2021, Adam Orczyk
+ */
+
+//% color=#f68420 icon="\uf111" block="PF Recorder"
 namespace pfRecorder {
     let data: number[][] = [];
     let isRecording = false;
