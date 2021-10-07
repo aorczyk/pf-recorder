@@ -1,2 +1,38 @@
-
-serial.writeLine(JSON.stringify(pfRecorder.reverseCommands([[134, 0, 1, 1, 1, 0b0101], [108, 0, 6, 1, 1, 101]], 0, 0)))
+let isPlaying = false;
+pfRecorder.init(
+    DigitalPin.P2,
+    AnalogPin.P0,
+    PfReceiverChannel.Channel2,
+    (data: number[][]) => {
+        if (!isPlaying) {
+            isPlaying = true;
+            control.runInBackground(() => {
+                basic.showString('*')
+                let reversed = pfRecorder.reverseOrder(data);
+                basic.showString('<')
+                pfTransmitter.play(reversed);
+                basic.clearScreen()
+                isPlaying = false;
+            })
+        } else {
+            isPlaying = false;
+            pfTransmitter.stopPlaying();
+        }
+    },
+    (data: number[][]) => {
+        if (!isPlaying) {
+            isPlaying = true;
+            control.runInBackground(() => {
+                basic.showString('*')
+                let reversed = pfRecorder.reverseCommands(data, 0, 0);
+                basic.showString('>')
+                pfTransmitter.play(reversed);
+                basic.clearScreen()
+                isPlaying = false;
+            })
+        } else {
+            isPlaying = false;
+            pfTransmitter.stopPlaying();
+        }
+    }
+)
