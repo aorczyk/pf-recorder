@@ -6,10 +6,10 @@ pfRecorder.init(
     (data: number[][]) => {
         if (!isPlaying) {
             isPlaying = true;
+            let reversed = pfRecorder.reverseOrder(data);
+            led.plot(4, 0)
+
             control.runInBackground(() => {
-                basic.showString('*')
-                let reversed = pfRecorder.reverseOrder(data);
-                basic.showString('<')
                 pfTransmitter.play(reversed);
                 basic.clearScreen()
                 isPlaying = false;
@@ -17,15 +17,16 @@ pfRecorder.init(
         } else {
             isPlaying = false;
             pfTransmitter.stopPlaying();
+            basic.clearScreen()
         }
     },
     (data: number[][]) => {
         if (!isPlaying) {
             isPlaying = true;
+            let reversed = pfRecorder.reverseCommands(data, 0, 0);
+            led.plot(4, 0)
+            
             control.runInBackground(() => {
-                basic.showString('*')
-                let reversed = pfRecorder.reverseCommands(data, 0, 0);
-                basic.showString('>')
                 pfTransmitter.play(reversed);
                 basic.clearScreen()
                 isPlaying = false;
@@ -33,6 +34,7 @@ pfRecorder.init(
         } else {
             isPlaying = false;
             pfTransmitter.stopPlaying();
+            basic.clearScreen()
         }
     }
 )

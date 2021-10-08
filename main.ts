@@ -13,30 +13,161 @@ namespace pfRecorder {
     let isRecording = false;
     let isPlaying = false;
 
+    function showRecordInfo(){
+        if (data[recordNr] == null) {
+            data[recordNr] = []
+        }
+
+        basic.showNumber(recordNr);
+        basic.showNumber(data[recordNr].length);
+    }
+
     function nextRecordNr(){
+        if (isPlaying || isRecording) {
+            return;
+        }
+
         recordNr += 1;
         if (recordNr > maxRecordNr){
             recordNr = 0;
         }
 
-        if (data.length - 1 < recordNr){
-            data.push([])
-        }
-
-        basic.showNumber(recordNr);
+        showRecordInfo();
     }
 
     function prevRecordNr() {
+        if (isPlaying || isRecording) {
+            return;
+        }
+
         recordNr -= 1;
         if (recordNr < 0) {
             recordNr = maxRecordNr
         }
 
-        basic.showNumber(recordNr);
+        showRecordInfo();
     }
 
+    function startRecord(){
+        basic.clearScreen();
+        led.plot(2, 2)
+        serial.writeLine('Recording...')
+        pfReceiver.startRecord([0]);
+    }
 
-    // Reversing commands order
+    function stopRecord(){
+        pfReceiver.stopRecord();
+        data[recordNr] = pfReceiver.getRecordedCommands();
+        basic.showNumber(data[recordNr].length);
+        serial.writeLine(JSON.stringify(data[recordNr]));
+    }
+
+    function onButtonA(){
+        if (isPlaying){
+            return;
+        }
+
+        if (isRecording) {
+            stopRecord();
+        } else {
+            startRecord()
+        }
+
+        isRecording = !isRecording
+    }
+    
+    function onButtonB() {
+        if (isRecording) {
+            return;
+        }
+
+        if (!isPlaying) {
+            if (data[recordNr].length > 0){
+                isPlaying = true;
+                basic.clearScreen();
+                led.plot(4, 0)
+
+                control.runInBackground(() => {
+                    pfTransmitter.play(data[recordNr]);
+                    basic.clearScreen();
+                    isPlaying = false;
+                })
+            } else {
+                basic.showNumber(0);
+            }
+        } else {
+            isPlaying = false;
+            pfTransmitter.stopPlaying();
+            basic.clearScreen();
+        }
+    }
+
+    input.onButtonPressed(Button.A, function () {
+        onButtonA()
+    })
+
+    input.onButtonPressed(Button.B, function () {
+        onButtonB()
+    })
+
+    input.onButtonPressed(Button.AB, function () {
+        nextRecordNr()
+    })
+
+    /**
+     * Initialize recorder. 
+     * Functions: 
+     * start/stop record - Button A or Rremote Control Red and Blue Forward
+     * , start/stop play - Button B or RC Red Forward
+     * , next record number - Button AB or RC Blue Forward
+     * , previous record number - RC Blue Backward
+     * , run custom action 1 - RC Red Backward
+     * , run custom action 2 - RC Red and Blue Backward.
+     * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
+     * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
+     * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: 1
+     * @param customAction1 the function which is run when red and blue button is switched to Forward
+     * @param customAction2 the function which is run when red and blue button is switched to Backward
+     */
+    //% blockId="pfRecorder_init"
+    //% block="initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin remote control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2
+    //% weight=100
+    export function init(
+        irReceiverPin: DigitalPin, 
+        irTransmitterPin: AnalogPin, 
+        recorderControlChannel: PfReceiverChannel, 
+        customAction1?: (commands?: number[][]) => void,
+        customAction2?: (commands?: number[][]) => void
+    ){
+        pfReceiver.connectIrReceiver(irReceiverPin)
+        pfTransmitter.connectIrSenderLed(irTransmitterPin)
+
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, onButtonA)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Float, PfAction.Pressed, onButtonB)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Forward, PfAction.Pressed, nextRecordNr)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Backward, PfAction.Pressed, prevRecordNr)
+
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Float, PfAction.Pressed, () => {
+            if (isPlaying || isRecording) {
+                return;
+            }
+            customAction1(data[recordNr])
+        })
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Backward, PfAction.Pressed, () => {
+            if (isPlaying || isRecording) {
+                return;
+            }
+            customAction2(data[recordNr])
+        })
+    }
+
+    /**
+     * Returns commands list in reversed order.
+     * @param commands the recorded commands
+     */
+    //% blockId="pfRecorder_reverse_order"
+    //% block="reverse commands order %commands"
+    //% weight=95
     export function reverseOrder(commands: number[][]): number[][] {
         let out: number[][] = [];
         let max = commands.length - 1;
@@ -61,13 +192,20 @@ namespace pfRecorder {
             out.push([0, +n, 1, 0, 0, 0b00010000])
         }
 
-        serial.writeString('Reversed order:\n')
-        serial.writeString(JSON.stringify(out) + '\n');
+        serial.writeLine('Reversed order:')
+        serial.writeLine(JSON.stringify(out));
         return out;
     }
 
-    // Reversing commands
-    // Reversing only commands from given channel and output.
+    /**
+     * Processes and returns command list reversing only commands from given channel and output.
+     * @param commands the recorded commands
+     * @param channel the channel (0-3), eg. 0
+     * @param output the output: 0 (Red), 1 (Blue), eg. 0
+     */
+    //% blockId="pfRecorder_reverse_commands"
+    //% block="reverse commands %commands from channel %channel output %output"
+    //% weight=90
     export function reverseCommands(commands: number[][], channel: number, output: number): number[][] {
         type ReverseMap = {
             [key: number]: number;
@@ -134,92 +272,8 @@ namespace pfRecorder {
             return [row[0], row[1], row[2], red, blue, newCommand]
         })
 
-        serial.writeString('Reversed commands:\n')
-        serial.writeString(JSON.stringify(out) + '\n');
+        serial.writeLine('Reversed commands:')
+        serial.writeLine(JSON.stringify(out));
         return out;
-    }
-
-    function startRecord(){
-        basic.clearScreen();
-        led.plot(0, 0)
-        serial.writeString('Recording...\n')
-        pfReceiver.startRecord([0]);
-    }
-
-    function stopRecord(){
-        pfReceiver.stopRecord();
-        data[recordNr] = pfReceiver.getRecordedCommands();
-        basic.showNumber(data[recordNr].length);
-        serial.writeString(JSON.stringify(data[recordNr]) + '\n');
-    }
-
-    function onButtonA(){
-        if (isRecording) {
-            stopRecord();
-        } else {
-            startRecord()
-        }
-
-        isRecording = !isRecording
-    }
-
-    function onButtonB() {
-        if (!isPlaying) {
-            isPlaying = true;
-            control.runInBackground(() => {
-                basic.showString('>')
-                pfTransmitter.play(data[recordNr]);
-                basic.clearScreen()
-                isPlaying = false;
-            })
-        } else {
-            isPlaying = false;
-            pfTransmitter.stopPlaying();
-        }
-    }
-
-    input.onButtonPressed(Button.A, function() {
-        onButtonA()
-    })
-
-    input.onButtonPressed(Button.A, function () {
-        onButtonA()
-    })
-
-    input.onButtonPressed(Button.B, function () {
-        onButtonB()
-    })
-
-    input.onButtonPressed(Button.AB, function () {
-        nextRecordNr()
-    })
-
-    /**
-     * Initialize recorder.
-     */
-    //% blockId="pfRecorder_init"
-    //% block="initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2
-    //% weight=100
-    export function init(
-        irReceiverPin: DigitalPin, 
-        irTransmitterPin: AnalogPin, 
-        recorderControlChannel: PfReceiverChannel, 
-        customAction1?: (commands?: number[][]) => void,
-        customAction2?: (commands?: number[][]) => void
-    ){
-        pfReceiver.connectIrReceiver(irReceiverPin)
-        pfTransmitter.connectIrSenderLed(irTransmitterPin)
-
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Float, PfAction.Pressed, onButtonA)
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Float, PfAction.Pressed, onButtonB)
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Forward, PfAction.Pressed, nextRecordNr)
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Backward, PfAction.Pressed, prevRecordNr)
-
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, () => {
-            customAction1(data[recordNr])
-        })
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Backward, PfAction.Pressed, () => {
-            customAction2(data[recordNr])
-        })
     }
 }
