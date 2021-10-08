@@ -5,8 +5,8 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "LEGO PF Transmitter": "github:aorczyk/lego-pf-transmitter#master",
-        "PF Receiver": "github:aorczyk/lego-pf-receiver#master"
+        "PF Receiver": "github:aorczyk/lego-pf-receiver#master",
+        "PF Transmitter": "github:aorczyk/lego-pf-transmitter#master"
     },
     "files": [
         "main.blocks",
