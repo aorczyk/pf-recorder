@@ -117,11 +117,11 @@ namespace pfRecorder {
     /**
      * Initialize recorder. 
      * Functions: 
-     * start/stop record - Button A or Rremote Control Red and Blue Forward
-     * , start/stop play - Button B or RC Red Forward
+     * start/stop record - Button A or RC Red Forward
+     * , start/stop play - Button B or RC Red Backward
      * , next record number - Button AB or RC Blue Forward
      * , previous record number - RC Blue Backward
-     * , run custom action 1 - RC Red Backward
+     * , run custom action 1 - RC Red and Blue Forward
      * , run custom action 2 - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
@@ -142,12 +142,12 @@ namespace pfRecorder {
         pfReceiver.connectIrReceiver(irReceiverPin)
         pfTransmitter.connectIrSenderLed(irTransmitterPin)
 
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, onButtonA)
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Float, PfAction.Pressed, onButtonB)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Float, PfAction.Pressed, onButtonA)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Float, PfAction.Pressed, onButtonB)
         pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Forward, PfAction.Pressed, nextRecordNr)
         pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Backward, PfAction.Pressed, prevRecordNr)
 
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Float, PfAction.Pressed, () => {
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, () => {
             if (isPlaying || isRecording) {
                 return;
             }
