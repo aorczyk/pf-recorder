@@ -13,6 +13,10 @@ namespace pfRecorder {
     let isRecording = false;
     let isPlaying = false;
 
+    type Channel = {
+        [key: number]: number
+    }
+
     function showRecordInfo(){
         if (data[recordNr] == null) {
             data[recordNr] = []
@@ -88,7 +92,7 @@ namespace pfRecorder {
                 led.plot(4, 0)
 
                 control.runInBackground(() => {
-                    pfTransmitter.play(data[recordNr]);
+                    play(data[recordNr]);
                     basic.clearScreen();
                     isPlaying = false;
                 })
@@ -96,8 +100,7 @@ namespace pfRecorder {
                 basic.showNumber(0);
             }
         } else {
-            isPlaying = false;
-            pfTransmitter.stopPlaying();
+            stopPlaying();
             basic.clearScreen();
         }
     }
@@ -162,19 +165,77 @@ namespace pfRecorder {
     }
 
     /**
+     * Plays commands recorded by PF Receiver extension.
+     * @param commands the recorded commands data
+     */
+    //% blockId="pfRecorder_play"
+    //% block="play commands %commands"
+    //% weight=90
+    export function play(commands: number[][]){
+        isPlaying = true;
+        let lastCommand = commands.length - 1;
+
+        commands.every((task, i) => {
+            if (!isPlaying){
+                return false;
+            }
+
+            // let start = input.runningTimeMicros();
+
+            if (task[2] == 1){
+                pfTransmitter.comboDirectMode(task[1], task[3], task[4])
+            } else {
+                pfTransmitter.singleOutputMode(task[1], 0, task[5])
+            }
+
+            if (i < lastCommand){
+                let shouldPause = task[0];
+                // alreadyPaused to be skipped - about 165u.
+                // let alreadyPaused = input.runningTimeMicros() - start; 
+                // let pause = shouldPause - alreadyPaused;
+                
+                // serial.writeNumbers([shouldPause, alreadyPaused])
+
+                if (shouldPause > 0){
+                    basic.pause(shouldPause)
+                }
+            }
+
+            return true;
+        })
+    }
+
+    /**
+     * Stops playing commands.
+     */
+    //% blockId="pfRecorder_stop_playing"
+    //% block="stop playing commands"
+    //% weight=80
+    export function stopPlaying() {
+        isPlaying = false;
+        let channels: Channel = {}
+
+        for (let task of data[recordNr]) {
+            if (!channels[task[1]]) {
+                channels[task[1]] = 1;
+
+                pfTransmitter.singleOutputMode(task[1], 0, 0b00010000)
+            }
+        }
+    }
+
+
+
+    /**
      * Returns commands list in reversed order.
      * @param commands the recorded commands
      */
     //% blockId="pfRecorder_reverse_order"
     //% block="reverse commands order %commands"
-    //% weight=95
+    //% weight=70
     export function reverseOrder(commands: number[][]): number[][] {
         let out: number[][] = [];
         let max = commands.length - 1;
-
-        type Channel = {
-            [key: number]: number
-        }
 
         let channels: Channel = {}
 
@@ -205,7 +266,7 @@ namespace pfRecorder {
      */
     //% blockId="pfRecorder_reverse_commands"
     //% block="reverse commands %commands from channel %channel output %output"
-    //% weight=90
+    //% weight=60
     export function reverseCommands(commands: number[][], channel: number, output: number): number[][] {
         type ReverseMap = {
             [key: number]: number;

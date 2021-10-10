@@ -78,6 +78,28 @@ let reversedCommands = pfRecorder.reverseCommands(recordedCommands, 0, 0);
 - `output` - the output: 0 (Red), 1 (Blue), eg. 0
 
 
+## pfRecorder.play
+
+Plays commands recorded by PF Receiver extension.
+
+```sig
+pfRecorder.play(commands)
+```
+
+### Parameters
+
+- `commands` - the array with data of recorded commands
+
+
+## pfRecorder.stopPlaying
+
+Stops playing commands and stops all used outputs channels.
+
+```sig
+pfRecorder.stopPlaying()
+```
+
+
 ## MakeCode Example
 
 ```blocks
