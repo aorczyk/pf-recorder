@@ -11,7 +11,9 @@
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "_locales/pl/PF Recorder-jsdoc-strings.json",
+        "_locales/pl/PF Recorder-strings.json"
     ],
     "testFiles": [
         "test.ts"

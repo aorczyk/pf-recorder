@@ -1,0 +1,18 @@
+{
+  "pfRecorder": "Power Functions Recorder.\r\nRecords commands from LEGO Power Functions remote controls and plays them.\r\n* (c) 2021, Adam Orczyk",
+  "pfRecorder.init": "Initialize recorder. \r\nFunctions: \r\nstart/stop record - Button A or RC Red Forward\r\n, start/stop play - Button B or RC Red Backward\r\n, next record number - Button AB or RC Blue Forward\r\n, previous record number - RC Blue Backward\r\n, run custom action 1 - RC Red and Blue Forward\r\n, run custom action 2 - RC Red and Blue Backward.",
+  "pfRecorder.init|param|customAction1": "the function which is run when red and blue button is switched to Forward",
+  "pfRecorder.init|param|customAction2": "the function which is run when red and blue button is switched to Backward",
+  "pfRecorder.init|param|irReceiverPin": "IR receiver pin, eg: DigitalPin.P2",
+  "pfRecorder.init|param|irTransmitterPin": "IR diode pin, eg: AnalogPin.P0",
+  "pfRecorder.init|param|recorderControlChannel": "channel (0-3) for controlling recorder from PF remote control, eg: 1",
+  "pfRecorder.play": "Plays commands recorded by PF Receiver extension.",
+  "pfRecorder.play|param|commands": "the recorded commands data",
+  "pfRecorder.reverseCommands": "Processes and returns command list reversing only commands from given channel and output.",
+  "pfRecorder.reverseCommands|param|channel": "the channel (0-3), eg. 0",
+  "pfRecorder.reverseCommands|param|commands": "the recorded commands",
+  "pfRecorder.reverseCommands|param|output": "the output: 0 (Red), 1 (Blue), eg. 0",
+  "pfRecorder.reverseOrder": "Returns commands list in reversed order.",
+  "pfRecorder.reverseOrder|param|commands": "the recorded commands",
+  "pfRecorder.stopPlaying": "Stops playing commands."
+}

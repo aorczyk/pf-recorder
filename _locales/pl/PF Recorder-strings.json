@@ -1,0 +1,7 @@
+{
+  "pfRecorder.init|block": "initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin remote control channel %recorderControlChannel",
+  "pfRecorder.reverseCommands|block": "reverse commands %commands from channel %channel output %output",
+  "pfRecorder.reverseOrder|block": "reverse commands order %commands",
+  "pfRecorder|block": "PF Recorder",
+  "{id:category}PfRecorder": "PfRecorder"
+}
