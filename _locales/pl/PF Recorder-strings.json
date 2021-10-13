@@ -1,7 +1,7 @@
 {
-  "pfRecorder.init|block": "initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin remote control channel %recorderControlChannel",
-  "pfRecorder.reverseCommands|block": "reverse commands %commands from channel %channel output %output",
-  "pfRecorder.reverseOrder|block": "reverse commands order %commands",
-  "pfRecorder|block": "PF Recorder",
+  "pfRecorder.init|block": "Ustawienia : pin odbiornika IR %irReceiverPin | pin diody IR %irTransmitterPin | rejestrowane kanały %channels | kanał do zdalnej kontroli %recorderControlChannel",
+  "pfRecorder.reverseCommands|block": "odwróć komendy %commands z kanału %channel wyjścia %output",
+  "pfRecorder.reverseOrder|block": "odwróć kolejność komend %commands",
+  "pfRecorder|block": "Rejestrator PF",
   "{id:category}PfRecorder": "PfRecorder"
 }

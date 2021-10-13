@@ -12,6 +12,7 @@ namespace pfRecorder {
     let maxRecordNr = 9;
     let isRecording = false;
     let isPlaying = false;
+    let recordedChannels: number[] = [];
 
     type Channel = {
         [key: number]: number
@@ -56,7 +57,7 @@ namespace pfRecorder {
         basic.clearScreen();
         led.plot(2, 2)
         serial.writeLine('Recording...')
-        pfReceiver.startRecord([0]);
+        pfReceiver.startRecord(recordedChannels);
     }
 
     function stopRecord(){
@@ -128,20 +129,23 @@ namespace pfRecorder {
      * , run custom action 2 - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
+     * @param channels recorded channels, eg: [0]
      * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: 1
      * @param customAction1 the function which is run when red and blue button is switched to Forward
      * @param customAction2 the function which is run when red and blue button is switched to Backward
      */
     //% blockId="pfRecorder_init"
-    //% block="initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin remote control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2
+    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2
     //% weight=100
     export function init(
         irReceiverPin: DigitalPin, 
-        irTransmitterPin: AnalogPin, 
+        irTransmitterPin: AnalogPin,
+        channels: PfReceiverChannel[] = [0],
         recorderControlChannel: PfReceiverChannel, 
         customAction1?: (commands?: number[][]) => void,
         customAction2?: (commands?: number[][]) => void
-    ){
+    ) {
+        recordedChannels = channels
         pfReceiver.connectIrReceiver(irReceiverPin)
         pfTransmitter.connectIrSenderLed(irTransmitterPin)
 
