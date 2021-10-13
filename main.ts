@@ -1,7 +1,7 @@
 /**
  * Power Functions Recorder.
  * Records commands from LEGO Power Functions remote controls and plays them.
- *
+ * 
  * (c) 2021, Adam Orczyk
  */
 
