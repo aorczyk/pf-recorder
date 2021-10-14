@@ -12,7 +12,12 @@ namespace pfRecorder {
     let maxRecordNr = 9;
     let isRecording = false;
     let isPlaying = false;
-    let recordedChannels: number[] = [];
+
+    interface Settings {
+        recordedChannels: number[]
+    }
+
+    let settings: Settings;
 
     type Channel = {
         [key: number]: number
@@ -57,7 +62,8 @@ namespace pfRecorder {
         basic.clearScreen();
         led.plot(2, 2)
         serial.writeLine('Recording...')
-        pfReceiver.startRecord(recordedChannels);
+        serial.writeLine(JSON.stringify(settings.recordedChannels))
+        pfReceiver.startRecord(settings.recordedChannels);
     }
 
     function stopRecord(){
@@ -145,7 +151,10 @@ namespace pfRecorder {
         customAction1?: (commands?: number[][]) => void,
         customAction2?: (commands?: number[][]) => void
     ) {
-        recordedChannels = channels
+        settings = {
+            recordedChannels: channels
+        }
+
         pfReceiver.connectIrReceiver(irReceiverPin)
         pfTransmitter.connectIrSenderLed(irTransmitterPin)
 
