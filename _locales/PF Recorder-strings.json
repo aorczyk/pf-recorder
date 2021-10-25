@@ -1,6 +1,6 @@
 {
-  "pfRecorder.init|block": "initialize : receiver pin %irReceiverPin transmitter pin %irTransmitterPin remote control channel %recorderControlChannel",
-  "pfRecorder.play|block": "play commands %commands",
+  "pfRecorder.init|block": "initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel",
+  "pfRecorder.play|block": "play commands %commands | skip all stop %skipAllStop",
   "pfRecorder.reverseCommands|block": "reverse commands %commands from channel %channel output %output",
   "pfRecorder.reverseOrder|block": "reverse commands order %commands",
   "pfRecorder.stopPlaying|block": "stop playing commands",

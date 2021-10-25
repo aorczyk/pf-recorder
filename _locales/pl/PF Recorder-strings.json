@@ -1,7 +1,9 @@
 {
   "pfRecorder.init|block": "Ustawienia : pin odbiornika IR %irReceiverPin | pin diody IR %irTransmitterPin | rejestrowane kanały %channels | kanał do zdalnej kontroli %recorderControlChannel",
+  "pfRecorder.play|block": "odtwórz komendy %commands | omijaj wszystko stop %skipAllStop",
   "pfRecorder.reverseCommands|block": "odwróć komendy %commands z kanału %channel wyjścia %output",
   "pfRecorder.reverseOrder|block": "odwróć kolejność komend %commands",
+  "pfRecorder.stopPlaying|block": "zatrzymaj odtwarzanie komend",
   "pfRecorder|block": "Rejestrator PF",
   "{id:category}PfRecorder": "PfRecorder"
 }
