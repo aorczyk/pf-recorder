@@ -37,7 +37,8 @@ pfRecorder.init(
             pfRecorder.stopPlaying();
             basic.clearScreen()
         }
-    }
+    },
+    false
 )
 
 // {

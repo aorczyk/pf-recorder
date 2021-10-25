@@ -14,7 +14,8 @@ namespace pfRecorder {
     let isPlaying = false;
 
     interface Settings {
-        recordedChannels: number[]
+        recordedChannels: number[],
+        skipAllStop: boolean
     }
 
     let settings: Settings;
@@ -99,7 +100,7 @@ namespace pfRecorder {
                 led.plot(4, 0)
 
                 control.runInBackground(() => {
-                    play(data[recordNr]);
+                    play(data[recordNr], settings.skipAllStop);
                     basic.clearScreen();
                     isPlaying = false;
                 })
@@ -139,9 +140,10 @@ namespace pfRecorder {
      * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: 1
      * @param customAction1 the function which is run when red and blue button is switched to Forward
      * @param customAction2 the function which is run when red and blue button is switched to Backward
+     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float
      */
     //% blockId="pfRecorder_init"
-    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2
+    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel" || custom action 1 %customAction1 custom action 2 %customAction2 skip all stop %skipAllStop
     //% weight=100
     export function init(
         irReceiverPin: DigitalPin, 
@@ -149,10 +151,12 @@ namespace pfRecorder {
         channels: PfReceiverChannel[] = [0],
         recorderControlChannel: PfReceiverChannel, 
         customAction1?: (commands?: number[][]) => void,
-        customAction2?: (commands?: number[][]) => void
+        customAction2?: (commands?: number[][]) => void,
+        skipAllStop: boolean = false
     ) {
         settings = {
-            recordedChannels: channels
+            recordedChannels: channels,
+            skipAllStop: skipAllStop
         }
 
         pfReceiver.connectIrReceiver(irReceiverPin)
@@ -180,11 +184,12 @@ namespace pfRecorder {
     /**
      * Plays commands recorded by PF Receiver extension.
      * @param commands the recorded commands data
+     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float
      */
     //% blockId="pfRecorder_play"
-    //% block="play commands %commands"
+    //% block="play commands %commands | skip all stop %skipAllStop"
     //% weight=90
-    export function play(commands: number[][]){
+    export function play(commands: number[][], skipAllStop: boolean = false){
         isPlaying = true;
         let lastCommand = commands.length - 1;
 
@@ -196,6 +201,11 @@ namespace pfRecorder {
             // let start = input.runningTimeMicros();
 
             if (task[2] == 1){
+                // Skipping: Red: Float, Blue: Float;
+                if (skipAllStop && i < lastCommand && task[3] == 0 && task[4] == 0) {
+                    return true;
+                }
+
                 pfTransmitter.comboDirectMode(task[1], task[3], task[4])
             } else {
                 pfTransmitter.singleOutputMode(task[1], 0, task[5])

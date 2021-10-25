@@ -41,7 +41,8 @@ pfRecorder.init(
     },
     (data: number[][]) => {
         // Do something when RC Red and Blue are Backward.
-    }
+    },
+    false
 )
 ```
 ### Parameters
@@ -50,6 +51,7 @@ pfRecorder.init(
 - `recorderControlChannel` - the channel (0-3) for controlling recorder from PF remote control, eg: 1
 - `customAction1` - the function which is run when red and blue button is switched to Forward
 - `customAction2` - the function which is run when red and blue button is switched to Backward
+- `skipAllStop` - if true, in Combo Direct Mode skips state: Red Float, Blue Float
 
 
 ## pfRecorder.reverseOrder
