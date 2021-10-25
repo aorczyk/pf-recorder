@@ -129,11 +129,11 @@ namespace pfRecorder {
      * Initialize recorder. 
      * Functions: 
      * start/stop record - Button A or RC Red Forward
-     * , start/stop play - Button B or RC Red Backward
-     * , next record number - Button AB or RC Blue Forward
-     * , previous record number - RC Blue Backward
-     * , run custom action 1 - RC Red and Blue Forward
-     * , run custom action 2 - RC Red and Blue Backward.
+     * start/stop play - Button B or RC Red Backward
+     * next record number - Button AB or RC Blue Forward
+     * previous record number - RC Blue Backward
+     * run custom action 1 - RC Red and Blue Forward
+     * run custom action 2 - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
      * @param channels recorded channels, eg: [0]
