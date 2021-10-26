@@ -13,8 +13,8 @@ Records commands from LEGO Power Functions remote controls and plays them. Using
 - start/stop play - Button B or RC Red Backward
 - next record number - Button AB or RC Blue Forward 
 - previous record number - RC Blue Backward 
-- run custom action 1 - RC Red and Blue Forward 
-- run custom action 2 - RC Red and Blue Backward 
+- playing commands in reverse order - RC Red and Blue Forward
+- playing reversed commands (from channel 1) in reverse order  - RC Red and Blue Backward
 
 ### :warning: Warning!
 **Lighting the diode and the IR receiver with sunlight :sunny: or from an ordinary light bulb :bulb: may interfere with the signal reception.**
@@ -36,12 +36,6 @@ pfRecorder.init(
     DigitalPin.P2,
     AnalogPin.P0,
     PfReceiverChannel.Channel2,
-    (data: number[][]) => {
-        // Do something when RC Red and Blue are Forward.
-    },
-    (data: number[][]) => {
-        // Do something when RC Red and Blue are Backward.
-    },
     false
 )
 ```
@@ -49,8 +43,6 @@ pfRecorder.init(
 - `irReceiverPin` - the digital pin where IR Receiver Module is connected, eg: DigitalPin.P2
 - `irTransmitterPin` - the analog pin where IR diode is connected, eg: AnalogPin.P0
 - `recorderControlChannel` - the channel (0-3) for controlling recorder from PF remote control, eg: 1
-- `customAction1` - the function which is run when red and blue button is switched to Forward
-- `customAction2` - the function which is run when red and blue button is switched to Backward
 - `skipAllStop` - if true, in Combo Direct Mode skips state: Red Float, Blue Float
 
 
@@ -110,40 +102,7 @@ pfRecorder.init(
     DigitalPin.P2,
     AnalogPin.P0,
     PfReceiverChannel.Channel2,
-    (data: number[][]) => {
-        if (!isPlaying) {
-            isPlaying = true;
-            let reversed = pfRecorder.reverseOrder(data);
-            led.plot(4, 0)
-
-            control.runInBackground(() => {
-                pfTransmitter.play(reversed);
-                basic.clearScreen()
-                isPlaying = false;
-            })
-        } else {
-            isPlaying = false;
-            pfTransmitter.stopPlaying();
-            basic.clearScreen()
-        }
-    },
-    (data: number[][]) => {
-        if (!isPlaying) {
-            isPlaying = true;
-            let reversed = pfRecorder.reverseCommands(data, 0, 0);
-            led.plot(4, 0)
-            
-            control.runInBackground(() => {
-                pfTransmitter.play(reversed);
-                basic.clearScreen()
-                isPlaying = false;
-            })
-        } else {
-            isPlaying = false;
-            pfTransmitter.stopPlaying();
-            basic.clearScreen()
-        }
-    }
+    false
 )
 ```
 

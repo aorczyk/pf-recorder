@@ -113,6 +113,49 @@ namespace pfRecorder {
         }
     }
 
+    function playInReverseOrder() {
+        if (isRecording) {
+            return;
+        }
+
+        if (!isPlaying) {
+            isPlaying = true;
+            let reversed = pfRecorder.reverseOrder(data[recordNr]);
+            led.plot(4, 0)
+
+            control.runInBackground(() => {
+                play(reversed, settings.skipAllStop);
+                basic.clearScreen()
+                isPlaying = false;
+            })
+        } else {
+            stopPlaying();
+            basic.clearScreen()
+        }
+    }
+
+    function playReversedCommandsInReverseOrder() {
+        if (isRecording) {
+            return;
+        }
+
+        if (!isPlaying) {
+            isPlaying = true;
+            let reversed = pfRecorder.reverseCommands(data[recordNr], 0, 0);
+            reversed = pfRecorder.reverseCommands(reversed, 0, 1);
+            led.plot(4, 0)
+            
+            control.runInBackground(() => {
+                play(reversed, settings.skipAllStop);
+                basic.clearScreen()
+                isPlaying = false;
+            })
+        } else {
+            stopPlaying();
+            basic.clearScreen()
+        }
+    }
+
     input.onButtonPressed(Button.A, function () {
         onButtonA()
     })
@@ -128,31 +171,27 @@ namespace pfRecorder {
     /**
      * Initialize recorder. 
      * Functions: 
-     * start/stop record - Button A or RC Red Forward
-     * start/stop play - Button B or RC Red Backward
-     * next record number - Button AB or RC Blue Forward
-     * previous record number - RC Blue Backward
-     * run custom action 1 - RC Red and Blue Forward
-     * run custom action 2 - RC Red and Blue Backward.
+     * start/stop record - Button A or RC Red Forward, 
+     * start/stop play - Button B or RC Red Backward, 
+     * next record number - Button AB or RC Blue Forward, 
+     * previous record number - RC Blue Backward,
+     * playing commands in reverse order - RC Red and Blue Forward,
+     * playing reversed commands in reverse order (from channel 1) - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
      * @param channels recorded channels, eg: [0]
      * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: 1
-     * @param customAction1 the function which is run when red and blue button is switched to Forward
-     * @param customAction2 the function which is run when red and blue button is switched to Backward
-     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float
+     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float, eg: false
      */
     //% blockId="pfRecorder_init"
-    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel" || custom action 1 %customAction1 | custom action 2 %customAction2 | skip all stop %skipAllStop
+    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel | skip all stop %skipAllStop"
     //% weight=100
     export function init(
         irReceiverPin: DigitalPin, 
         irTransmitterPin: AnalogPin,
         channels: PfReceiverChannel[] = [0],
-        recorderControlChannel: PfReceiverChannel, 
-        customAction1?: (commands?: number[][]) => void,
-        customAction2?: (commands?: number[][]) => void,
-        skipAllStop: boolean = false
+        recorderControlChannel: PfReceiverChannel,
+        skipAllStop: boolean = false,
     ) {
         settings = {
             recordedChannels: channels,
@@ -167,18 +206,8 @@ namespace pfRecorder {
         pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Forward, PfAction.Pressed, nextRecordNr)
         pfReceiver.onRCcommand(recorderControlChannel, PfControl.Float, PfControl.Backward, PfAction.Pressed, prevRecordNr)
 
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, () => {
-            if (isPlaying || isRecording) {
-                return;
-            }
-            customAction1(data[recordNr])
-        })
-        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Backward, PfAction.Pressed, () => {
-            if (isPlaying || isRecording) {
-                return;
-            }
-            customAction2(data[recordNr])
-        })
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Forward, PfControl.Forward, PfAction.Pressed, playInReverseOrder)
+        pfReceiver.onRCcommand(recorderControlChannel, PfControl.Backward, PfControl.Backward, PfAction.Pressed, playReversedCommandsInReverseOrder)
     }
 
     /**

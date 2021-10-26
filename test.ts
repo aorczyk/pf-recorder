@@ -4,40 +4,6 @@ pfRecorder.init(
     AnalogPin.P0,
     [PfReceiverChannel.Channel1],
     PfReceiverChannel.Channel2,
-    (data: number[][]) => {
-        if (!isPlaying) {
-            isPlaying = true;
-            let reversed = pfRecorder.reverseOrder(data);
-            led.plot(4, 0)
-
-            control.runInBackground(() => {
-                pfRecorder.play(reversed);
-                basic.clearScreen()
-                isPlaying = false;
-            })
-        } else {
-            isPlaying = false;
-            pfRecorder.stopPlaying();
-            basic.clearScreen()
-        }
-    },
-    (data: number[][]) => {
-        if (!isPlaying) {
-            isPlaying = true;
-            let reversed = pfRecorder.reverseCommands(data, 0, 0);
-            led.plot(4, 0)
-            
-            control.runInBackground(() => {
-                pfRecorder.play(reversed);
-                basic.clearScreen()
-                isPlaying = false;
-            })
-        } else {
-            isPlaying = false;
-            pfRecorder.stopPlaying();
-            basic.clearScreen()
-        }
-    },
     false
 )
 

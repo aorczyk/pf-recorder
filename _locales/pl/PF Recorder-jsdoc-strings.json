@@ -1,9 +1,7 @@
 {
   "pfRecorder": "Rejestrator Power Functions.\r\nNagrywa komendy z pilotów LEGO Power Functions i je odtwarza.\r\n* (c) 2021, Adam Orczyk",
-  "pfRecorder.init": "Ustawienia rejestratora. \r\nFunkcje: \r\nstart/stop nagrywania - Przycisk A lub na pilocie czerwony do przodu\r\n, start/stop odtwarzania - Przycisk B lub na pilocie czerwony do tyłu\r\n, następne nagranie - Przycisk AB lub na pilocie niebieski do przodu\r\n, wcześniejsze nagranie - na pilocie niebieski do tyłu\r\n, zaprogramowana akcja 1 - na pilocie czerwony i niebieski do przodu\r\n, zaprogramowana akcja 2 - na pilocie czerwony i niebieski do tyłu.",
+  "pfRecorder.init": "Ustawienia rejestratora. \r\nFunkcje: \r\nstart/stop nagrywania - Przycisk A lub na pilocie czerwony do przodu, \r\nstart/stop odtwarzania - Przycisk B lub na pilocie czerwony do tyłu, \r\nnastępne nagranie - Przycisk AB lub na pilocie niebieski do przodu, \r\nwcześniejsze nagranie - na pilocie niebieski do tyłu, \r\nodtwarzanie komend w odwrotnej kolejności - na pilocie czerwony i niebieski do przodu, \r\nodtwarzanie odwrotnych komend (z kanału 1) w odwrotnej kolejności - na pilocie czerwony i niebieski do tyłu.",
   "pfRecorder.init|param|channels": "Lista kanałów, z których rejestrowane są komendy, np.: [0]",
-  "pfRecorder.init|param|customAction1": "funkcja, która jest uruchamiana kiedy czerwony i niebieski przełącznik na pilocie jest ustawiony do przodu",
-  "pfRecorder.init|param|customAction2": "funkcja, która jest uruchamiana kiedy czerwony i niebieski przełącznik na pilocie jest ustawiony do tyłu",
   "pfRecorder.init|param|irReceiverPin": "Pin odbiornika IR, np.: DigitalPin.P2",
   "pfRecorder.init|param|irTransmitterPin": "Pin diody IR, np.: AnalogPin.P0",
   "pfRecorder.init|param|recorderControlChannel": "kanał (0-3) do kontroli rejestratora za pomocą pilota PF, np.: 1",
