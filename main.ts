@@ -184,8 +184,8 @@ namespace pfRecorder {
      * playing reversed commands in reverse order - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
-     * @param channels recorded channels, eg: [0]
-     * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: 1
+     * @param channels recorded channels, eg: [PfReceiverChannel.Channel1]
+     * @param recorderControlChannel channel (0-3) for controlling recorder from PF remote control, eg: PfReceiverChannel.Channel2
      * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float, eg: false
      */
     //% blockId="pfRecorder_init"
@@ -194,7 +194,7 @@ namespace pfRecorder {
     export function init(
         irReceiverPin: DigitalPin, 
         irTransmitterPin: AnalogPin,
-        channels: PfReceiverChannel[] = [0],
+        channels: PfReceiverChannel[],
         recorderControlChannel: PfReceiverChannel,
         skipAllStop: boolean = false,
     ) {
@@ -218,7 +218,7 @@ namespace pfRecorder {
     /**
      * Plays commands recorded by PF Receiver extension.
      * @param commands the recorded commands data
-     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float
+     * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float, eg: false
      */
     //% blockId="pfRecorder_play"
     //% block="play commands %commands | skip all stop %skipAllStop"
