@@ -141,8 +141,13 @@ namespace pfRecorder {
 
         if (!isPlaying) {
             isPlaying = true;
-            let reversed = pfRecorder.reverseCommands(data[recordNr], 0, 0);
-            reversed = pfRecorder.reverseCommands(reversed, 0, 1);
+            let reversed = data[recordNr];
+
+            settings.recordedChannels.forEach(channel => {
+                reversed = pfRecorder.reverseCommands(reversed, channel, 0);
+                reversed = pfRecorder.reverseCommands(reversed, channel, 1);
+            })
+
             led.plot(4, 0)
             
             control.runInBackground(() => {
@@ -176,7 +181,7 @@ namespace pfRecorder {
      * next record number - Button AB or RC Blue Forward, 
      * previous record number - RC Blue Backward,
      * playing commands in reverse order - RC Red and Blue Forward,
-     * playing reversed commands in reverse order (from channel 1) - RC Red and Blue Backward.
+     * playing reversed commands in reverse order - RC Red and Blue Backward.
      * @param irReceiverPin IR receiver pin, eg: DigitalPin.P2
      * @param irTransmitterPin IR diode pin, eg: AnalogPin.P0
      * @param channels recorded channels, eg: [0]
