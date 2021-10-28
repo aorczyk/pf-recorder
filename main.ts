@@ -217,7 +217,7 @@ namespace pfRecorder {
 
     /**
      * Plays commands recorded by PF Receiver extension.
-     * @param commands the recorded commands data
+     * @param commands the recorded commands data, eg: []
      * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float, eg: false
      */
     //% blockId="pfRecorder_play"
@@ -285,7 +285,7 @@ namespace pfRecorder {
 
     /**
      * Returns commands list in reversed order.
-     * @param commands the recorded commands
+     * @param commands the recorded commands, eg: []
      */
     //% blockId="pfRecorder_reverse_order"
     //% block="reverse commands order %commands"
@@ -317,14 +317,14 @@ namespace pfRecorder {
 
     /**
      * Processes and returns command list reversing only commands from given channel and output.
-     * @param commands the recorded commands
-     * @param channel the channel (0-3), eg. 0
-     * @param output the output: 0 (Red), 1 (Blue), eg. 0
+     * @param commands the recorded commands, eg: []
+     * @param channel the channel (0-3), eg. PfChannel.Channel1
+     * @param output the output: 0 (Red), 1 (Blue), eg. PfOutput.Red
      */
     //% blockId="pfRecorder_reverse_commands"
     //% block="reverse commands %commands from channel %channel output %output"
     //% weight=60
-    export function reverseCommands(commands: number[][], channel: number, output: number): number[][] {
+    export function reverseCommands(commands: number[][], channel: PfChannel, output: PfOutput): number[][] {
         type ReverseMap = {
             [key: number]: number;
         };
