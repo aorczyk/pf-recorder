@@ -318,8 +318,8 @@ namespace pfRecorder {
     /**
      * Processes and returns command list reversing only commands from given channel and output.
      * @param commands the recorded commands, eg: []
-     * @param channel the channel (0-3), eg. PfChannel.Channel1
-     * @param output the output: 0 (Red), 1 (Blue), eg. PfOutput.Red
+     * @param channel the channel (0-3), eg: PfChannel.Channel1
+     * @param output the output: 0 (Red), 1 (Blue), eg: PfOutput.Red
      */
     //% blockId="pfRecorder_reverse_commands"
     //% block="reverse commands %commands from channel %channel output %output"
