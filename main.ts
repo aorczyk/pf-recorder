@@ -149,7 +149,7 @@ namespace pfRecorder {
             })
 
             led.plot(0, 2);
-            led.plot(0, 1);
+            led.plot(1, 2);
             
             control.runInBackground(() => {
                 play(reversed, settings.skipAllStop);
