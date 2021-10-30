@@ -97,7 +97,7 @@ namespace pfRecorder {
             if (data[recordNr].length > 0){
                 isPlaying = true;
                 basic.clearScreen();
-                led.plot(4, 0)
+                led.plot(4, 2)
 
                 control.runInBackground(() => {
                     play(data[recordNr], settings.skipAllStop);
@@ -121,7 +121,7 @@ namespace pfRecorder {
         if (!isPlaying) {
             isPlaying = true;
             let reversed = pfRecorder.reverseOrder(data[recordNr]);
-            led.plot(4, 0)
+            led.plot(0, 2)
 
             control.runInBackground(() => {
                 play(reversed, settings.skipAllStop);
@@ -148,7 +148,8 @@ namespace pfRecorder {
                 reversed = pfRecorder.reverseCommands(reversed, channel, 1);
             })
 
-            led.plot(4, 0)
+            led.plot(0, 2);
+            led.plot(0, 1);
             
             control.runInBackground(() => {
                 play(reversed, settings.skipAllStop);
