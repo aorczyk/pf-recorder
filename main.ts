@@ -190,7 +190,7 @@ namespace pfRecorder {
      * @param skipAllStop if true, in Combo Direct Mode skips state: Red Float, Blue Float, eg: false
      */
     //% blockId="pfRecorder_init"
-    //% block="initialize : receiver pin %irReceiverPin | transmitter pin %irTransmitterPin | record from channels %channels | remote control channel %recorderControlChannel | skip all stop %skipAllStop"
+    //% block="PF Recorder settings : receiver pin %irReceiverPin transmitter pin %irTransmitterPin record from channels %channels remote control channel %recorderControlChannel skip all stop %skipAllStop"
     //% weight=100
     export function init(
         irReceiverPin: DigitalPin, 
