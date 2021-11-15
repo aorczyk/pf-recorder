@@ -16,14 +16,20 @@ Records commands from LEGO Power Functions remote controls and plays them. Using
 - playing commands in reverse order - RC Red and Blue Forward
 - playing reversed commands (from channel 1) in reverse order  - RC Red and Blue Backward
 
-### :warning: Warning!
+** Sometimes program registers more commands because some commands are missed by LEGO PF receiver.**
+
+## :warning: Warning!
 **Lighting the diode and the IR receiver with sunlight :sunny: or from an ordinary light bulb :bulb: may interfere with the signal reception.**
 
-## Installation
+## Use as Extension
 
-1. Open MakeCode and select '+ Extensions' in the 'Advanced' menu. 
-2. Enter the project URL https://github.com/aorczyk/pf-recorder in the search field.
-3. Select the `PF Recorder` extension.
+This repository can be added as an **extension** in MakeCode.
+
+* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
+* click on **New Project**
+* click on **Extensions** under the gearwheel menu
+* search for **https://github.com/aorczyk/pf-recorder** and import
+
 
 # Documentation
 
@@ -97,7 +103,6 @@ pfRecorder.stopPlaying()
 ## MakeCode Example
 
 ```blocks
-let isPlaying = false;
 pfRecorder.init(
     DigitalPin.P2,
     AnalogPin.P0,
