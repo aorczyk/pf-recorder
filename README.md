@@ -1,6 +1,6 @@
 # Power Functions Recorder
 
-Records commands from LEGO Power Functions remote controls and plays them. Using IR Receiver Module Iduino ST1089 and IR 940 nm emitting diode.
+Recording commands from LEGO Power Functions remote controls and playing them. Using IR Receiver Module Iduino ST1089 and IR 940 nm emitting diode.
 
 ### Features:
 - all PF remote controls are supported
