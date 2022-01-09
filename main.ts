@@ -2,6 +2,8 @@
  * Power Functions Recorder.
  * Recording commands from LEGO Power Functions remote controls and playing them.
  * 
+ * LEGO Power Functions RC documentation: https://www.philohome.com/pf/LEGO_Power_Functions_RC.pdf
+ * 
  * (c) 2021, Adam Orczyk
  */
 
