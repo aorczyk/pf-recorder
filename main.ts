@@ -64,8 +64,8 @@ namespace pfRecorder {
     function startRecord(){
         basic.clearScreen();
         led.plot(2, 2)
-        serial.writeLine('Recording...')
-        serial.writeLine(JSON.stringify(settings.recordedChannels))
+        // serial.writeLine('Recording...')
+        // serial.writeLine(JSON.stringify(settings.recordedChannels))
         pfReceiver.startRecord(settings.recordedChannels);
     }
 
@@ -73,7 +73,7 @@ namespace pfRecorder {
         pfReceiver.stopRecord();
         data[recordNr] = pfReceiver.getRecordedCommands();
         basic.showNumber(data[recordNr].length);
-        serial.writeLine(JSON.stringify(data[recordNr]));
+        // serial.writeLine(JSON.stringify(data[recordNr]));
     }
 
     function onButtonA(){
@@ -313,8 +313,8 @@ namespace pfRecorder {
             out.push([0, +n, 1, 0, 0, 0b00010000])
         }
 
-        serial.writeLine('Reversed order:')
-        serial.writeLine(JSON.stringify(out));
+        // serial.writeLine('Reversed order:')
+        // serial.writeLine(JSON.stringify(out));
         return out;
     }
 
@@ -393,8 +393,8 @@ namespace pfRecorder {
             return [row[0], row[1], row[2], red, blue, newCommand]
         })
 
-        serial.writeLine('Reversed commands:')
-        serial.writeLine(JSON.stringify(out));
+        // serial.writeLine('Reversed commands:')
+        // serial.writeLine(JSON.stringify(out));
         return out;
     }
 }
